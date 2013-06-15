@@ -45,11 +45,10 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.launcherText.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.launcherText.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.launcherText.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.launcherText.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.launcherText.Font = new System.Drawing.Font("MS UI Gothic", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.launcherText.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.launcherText.Location = new System.Drawing.Point(15, 15);
+            this.launcherText.Location = new System.Drawing.Point(15, 1);
             this.launcherText.Margin = new System.Windows.Forms.Padding(5);
             this.launcherText.MaxLength = 100;
             this.launcherText.Name = "launcherText";
@@ -91,18 +90,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(600, 70);
+            this.ClientSize = new System.Drawing.Size(594, 63);
             this.ControlBox = false;
             this.Controls.Add(this.launcherText);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "mainForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "launcher";
+            this.Text = " ";
             this.Load += new System.EventHandler(this.mainForm_Load);
             this.Shown += new System.EventHandler(this.mainForm_Shown);
             this.notifyIconMenu.ResumeLayout(false);

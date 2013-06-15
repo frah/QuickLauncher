@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace QuickLauncher
 {
-    public partial class mainForm : Form
+    public partial class mainForm : CSWinFormExAeroToClient.GlassForm
     {
         private HotKey hotKey;
         private Dictionary<string, string> apps;
@@ -27,6 +27,12 @@ namespace QuickLauncher
             /* Initialize HotKey */
             hotKey = new HotKey(MOD_KEY.CONTROL | MOD_KEY.SHIFT, Keys.Space);
             hotKey.HotKeyPush += new EventHandler(hotKey_HotKeyPush);
+
+            this.ExtendFrameEnabled = true;
+            this.BlurBehindWindowEnabled = false;
+            //this.GlassMargins = new CSWinFormExAeroToClient.NativeMethods.MARGINS(15, 100, 0, 23);
+            this.GlassMargins = new CSWinFormExAeroToClient.NativeMethods.MARGINS(-1);
+            this.Invalidate();
 
             initWorker.RunWorkerAsync();
         }
