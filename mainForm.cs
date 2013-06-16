@@ -38,6 +38,9 @@ namespace QuickLauncher
             /* Add default commands */
             apps.Add("exit", "exit", CompleteItem.CompleteItemType.ApplicationFunction);
             apps.Add("pref", "pref", CompleteItem.CompleteItemType.ApplicationFunction);
+            apps.Add("google", "https://www.google.co.jp/search?q={query}", CompleteItem.CompleteItemType.WebFunction);
+            apps.Add("shutdown", "shutdown /s", CompleteItem.CompleteItemType.CommandLineFunction);
+            apps.Add("sleep", "rundll32.exe PowrProf.dll,SetSuspendState", CompleteItem.CompleteItemType.CommandLineFunction);
 
             initWorker.RunWorkerAsync();
         }
@@ -84,51 +87,6 @@ namespace QuickLauncher
         {
             launcherText.ResetText();
             this.Hide();
-        }
-
-        private void launcherText_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData != Keys.Enter) return;
-
-            try
-            {
-                var ret = apps.Get(launcherText.Text);
-                switch (ret.Type)
-                {
-                    case CompleteItem.CompleteItemType.ProgramShortcut:
-                        try
-                        {
-                            System.Diagnostics.Process.Start(ret.Path);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(
-                                "アプリケーション起動時に例外が発生しました\r\n" + ex.ToString(),
-                                "QuickLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        break;
-                    case CompleteItem.CompleteItemType.ApplicationFunction:
-                        switch (ret.Name)
-                        {
-                            case "exit":
-                                quitMenuItem_Click(null, null);
-                                break;
-                            case "pref":
-                                prefMenuItem_Click(null, null);
-                                break;
-                        }
-                        break;
-                    case CompleteItem.CompleteItemType.CommandLineFunction:
-                        break;
-                    case CompleteItem.CompleteItemType.WebFunction:
-                        break;
-                    case CompleteItem.CompleteItemType.UserFunction:
-                        break;
-                }
-                    
-                formHide();
-            }
-            catch (KeyNotFoundException) { }
         }
 
         private void quitMenuItem_Click(object sender, EventArgs e)
@@ -200,6 +158,73 @@ namespace QuickLauncher
         private void notifyIcon_DoubleClick(object sender, EventArgs e)
         {
             prefMenuItem_Click(sender, e);
+        }
+
+        private void launcherText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+
+            try
+            {
+                var ret = apps.Get(launcherText.Text);
+                switch (ret.Type)
+                {
+                    case CompleteItem.CompleteItemType.ProgramShortcut:
+                        try
+                        {
+                            System.Diagnostics.Process.Start(ret.Path);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(
+                                "アプリケーション起動時に例外が発生しました\r\n\r\n" + ex.ToString(),
+                                "QuickLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        break;
+                    case CompleteItem.CompleteItemType.ApplicationFunction:
+                        switch (ret.Name)
+                        {
+                            case "exit":
+                                quitMenuItem_Click(null, null);
+                                break;
+                            case "pref":
+                                prefMenuItem_Click(null, null);
+                                break;
+                        }
+                        break;
+                    case CompleteItem.CompleteItemType.CommandLineFunction:
+                        try
+                        {
+                            System.Diagnostics.Process.Start("cmd.exe", "/c "+ret.Path);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show(
+                                "アプリケーション起動時に例外が発生しました\r\n\r\n" + ex.ToString(),
+                                "QuickLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        break;
+                    case CompleteItem.CompleteItemType.WebFunction:
+                        int i = launcherText.Text.IndexOf(' ');
+                        string arg = System.Net.WebUtility.HtmlEncode(launcherText.Text.Substring(i + 1));
+                        string uri = ret.Path.Replace("{query}", arg);
+                        try
+                        {
+                            System.Diagnostics.Process.Start(uri);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(
+                                "アプリケーション起動時に例外が発生しました\r\n\r\n" + ex.ToString(),
+                                "QuickLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        break;
+                    case CompleteItem.CompleteItemType.UserFunction:
+                        break;
+                }
+
+                formHide();
+            }
+            catch (KeyNotFoundException) { }
         }
     }
 }

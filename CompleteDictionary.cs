@@ -75,9 +75,22 @@ namespace QuickLauncher
         /// <returns>一致するキーが合った時，それに対応するCompleteItem</returns>
         public CompleteItem Get(string key)
         {
+            string[] keys = key.Split(' ');
             foreach (var i in this)
             {
-                if (string.Compare(i.Key, key, true) == 0) return i.Value;
+                switch (i.Value.Type)
+                {
+                    case CompleteItem.CompleteItemType.ApplicationFunction:
+                    case CompleteItem.CompleteItemType.ProgramShortcut:
+                        if (string.Compare(i.Key, key, true) == 0) return i.Value;
+                        break;
+                    case CompleteItem.CompleteItemType.WebFunction:
+                    case CompleteItem.CompleteItemType.CommandLineFunction:
+                    case CompleteItem.CompleteItemType.UserFunction:
+                        if (string.Compare(i.Key, keys[0], true) == 0) return i.Value;
+                        break;
+                }
+                
             }
             throw new KeyNotFoundException("No such key item");
         }

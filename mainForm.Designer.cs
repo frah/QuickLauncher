@@ -58,7 +58,7 @@
             this.launcherText.TabIndex = 0;
             this.launcherText.TabStop = false;
             this.launcherText.WordWrap = false;
-            this.launcherText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.launcherText_KeyUp);
+            this.launcherText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.launcherText_KeyDown);
             // 
             // notifyIcon
             // 
