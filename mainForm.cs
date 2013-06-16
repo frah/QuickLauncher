@@ -214,7 +214,7 @@ namespace QuickLauncher
                         break;
                     case CompleteItem.CompleteItemType.WebFunction:
                         int i = launcherText.Text.IndexOf(' ');
-                        string arg = System.Net.WebUtility.HtmlEncode(launcherText.Text.Substring(i + 1));
+                        string arg = System.Web.HttpUtility.UrlEncode(launcherText.Text.Substring(i + 1), Encoding.UTF8);
                         string uri = ret.Path.Replace("{query}", arg);
                         try
                         {
