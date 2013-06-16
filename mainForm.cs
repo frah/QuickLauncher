@@ -42,6 +42,7 @@ namespace QuickLauncher
             apps.Add("shutdown", "shutdown /s", CompleteItem.CompleteItemType.CommandLineFunction);
             apps.Add("sleep", "rundll32.exe PowrProf.dll,SetSuspendState", CompleteItem.CompleteItemType.CommandLineFunction);
 
+            UpdateCompleteSource();
             initWorker.RunWorkerAsync();
         }
 
@@ -101,12 +102,20 @@ namespace QuickLauncher
             }
         }
 
+        private void UpdateCompleteSource()
+        {
+            var a = launcherText.AutoCompleteCustomSource;
+            a.Clear();
+            a.AddRange(apps.Keys.ToArray());
+            launcherText.AutoCompleteCustomSource = a;
+        }
+
         private void initWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             ShowBalloon("アプリケーション一覧のロードを開始します...");
 
             /* List up applications */
-            AutoCompleteStringCollection complSource = new AutoCompleteStringCollection();
+            int i = 0;
             var regex = new Regex(
                 @"(.*\\(スタートアップ|Startup)\\.*|.*(About|Readme|Sample|Setup|Uninstall|アンインストール|削除|Change ?Log|Help).*?)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -124,6 +133,7 @@ namespace QuickLauncher
                         try
                         {
                             apps.Add(Path.GetFileNameWithoutExtension(ap), ap, CompleteItem.CompleteItemType.ProgramShortcut);
+                            i++;
                         }
                         catch (ArgumentException ae)
                         {
@@ -132,8 +142,7 @@ namespace QuickLauncher
                     }
                 }
             }
-            complSource.AddRange(apps.Keys.ToArray());
-            e.Result = complSource;
+            e.Result = i;
         }
 
         private void initWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -145,8 +154,8 @@ namespace QuickLauncher
             }
             else
             {
-                launcherText.AutoCompleteCustomSource = e.Result as AutoCompleteStringCollection;
-                ShowBalloon(launcherText.AutoCompleteCustomSource.Count+"件のアプリケーションのロードを完了しました");
+                UpdateCompleteSource();
+                ShowBalloon(e.Result+"件のアプリケーションのロードを完了しました");
             }
         }
 
